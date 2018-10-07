@@ -49,7 +49,6 @@ namespace PullToScxtpt
                 foreach (DataRow item in companyInfoTable.Rows)
                 {
 
-                    codeMappers.Where(c => item["icnItemName"].ToString().Equals(c.localCodeExplain)).FirstOrDefault().codeValue.ToString();
                     CompanyInfo companyInfo = new CompanyInfo()
 
                     {
@@ -70,9 +69,10 @@ namespace PullToScxtpt
                         aab049 = item["RegisteredCapital"].ToString(),
                         aae036 = item["SetUpDate"].ToString(),
                         aae396 = item["InspectionDate"].ToString(),
-                        aae022 = item["clAddress"].ToString(),
-                        aab998 = item["Nsrsbm"].ToString(),
-                        aab020 = codeMappers.Where(c => item["icnItemName"].ToString().Equals(c.localCodeExplain)).FirstOrDefault().codeValue.ToString(),
+                        
+                        aae022 = "510400000000",
+                        //aab998 = item["Nsrsbm"].ToString(),
+                        aab020 = codeMappers.Where(c => item["icnItemName"].ToString().Equals(c.localCodeExplain)).Where(c=>c.codeType.Equals("AAB020")).FirstOrDefault().codeValue.ToString(),
                         aab301 = "510400000000",
                         aae011 = "攀枝花市",
                       //  yae100 = "攀枝花市人才中心"
