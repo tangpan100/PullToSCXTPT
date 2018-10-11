@@ -27,7 +27,8 @@ namespace PullToScxtpt
             {
                 Thread.Sleep(1000 * 10);
                 Sender sender = new Sender();
-                sender.CallWebService();
+              //  sender.InserCompanyInfo();
+                sender.InserPersonInfo();
                 //timer1 = new System.Timers.Timer();
                 //timer1.Interval = 7200000;  //设置计时器事件间隔执行时间 2小时
                 //timer1.Elapsed += new System.Timers.ElapsedEventHandler(TMStart1_Elapsed);

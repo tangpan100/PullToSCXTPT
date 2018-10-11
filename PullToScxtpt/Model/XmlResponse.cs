@@ -13,10 +13,10 @@ namespace PullToScxtpt
         /// <summary>
         /// 结果代码值
         /// </summary>
-        public string Code{ get; set; }
+        public string status { get; set; }
         /// <summary>
         /// 结果信息
         /// </summary>
-        public string Message { get; set; }
+        public string msg { get; set; }
     }
 }

@@ -14,13 +14,13 @@ namespace PullToScxtpt
         public List<PersonInfo> QueryPersonInfo()
         {
           
-            string cmdText = @"SELECT  pbi.AccountID ,
+            string cmdText = @"SELECT top 1  pbi.AccountID ,
                                 pbi.PersonName ,
                                 pbi.IDCardNo ,
-                                pbi.Sex ,
+                                Sex= case when pbi.Sex='男' then 1 else 2 end ,
                                 nat.ItemName natItem ,
                                 pbi.Birthday ,
-                                pbi.MaritalStatus ,
+                                MaritalStatus =case when pbi.MaritalStatus=0 then 1  when pbi.MaritalStatus=1 then 2 else 4 end ,
                                 ps.ItemName psItem ,
                                 we.Years ,
                                 deg.ItemName degItem ,
@@ -43,31 +43,43 @@ namespace PullToScxtpt
                                                 dbo.ItemCities c2
                                        WHERE    c1.ParentID = CONVERT(VARCHAR(50),c2.ID))ic
                                        ON ic.id=pbi.PermanentResidenceID";
-            DataTable personTable = SqlHelper.ExecuteDataTable(cmdText,new SqlParameter());
-            List<PersonInfo> list = new List<PersonInfo>();
+            DataTable personTable = SqlHelper.ExecuteDataTable(cmdText, new SqlParameter("@param", DBNull.Value));
+            List<CodeMapper> codeMappers = SqlHelper.QueryCodeMapper();
+
             if (personTable.Rows.Count>0)
             {
+                List<PersonInfo> list = new List<PersonInfo>();
                 foreach (DataRow item in personTable.Rows)
                 {
                     PersonInfo personInfo = new PersonInfo()
                     {
-                        AAC001 = item["AccountID"].ToString(),
-                        AAC003 = item["PersonName"].ToString(),
-                        AAC002 = item["IDCardNo"].ToString(),
-                        AAC004 = item["Sex"].ToString(),
-                        AAC005 = item["natItem"].ToString(),
-                        AAC006 = item["Birthday"].ToString(),
-                        AAC017 = item["MaritalStatus"].ToString(),
-                        AAC024 = item["psItem"].ToString(),
-                        ACC217 = item["Years"].ToString(),
-                        AAC011 = item["degItem"].ToString(),
-                        YAU002 = item["GraduateSchool"].ToString(),
-                        AAC183 = item["Major"].ToString(),
-                        YAC01G = item["GraduationTime"].ToString(),
-                        ACB501 = item["Mobile"].ToString(),
-                        AAC010 = item["Height"].ToString(),
-                        AAB301 = item["name"].ToString(),
+                        aac001 = item["AccountID"].ToString(),
+                        aac003 = item["PersonName"].ToString(),
+                        aac002 = item["IDCardNo"].ToString(),
+                        aac004 = item["Sex"].ToString(),
+                        
+                        aac005 = codeMappers.Where(c => item["natItem"].ToString().Equals(c.localCodeExplain)).FirstOrDefault().codeValue.ToString(),
+                        aac006 = item["Birthday"].ToString(),
+                        aac017 = item["MaritalStatus"].ToString(),
+                       
+                        aac024 = codeMappers.Where(c => item["psItem"].ToString().Equals(c.localCodeExplain)).FirstOrDefault().codeValue.ToString(),
+                        acc217 = item["Years"].ToString(),
+                      
+                        aac011 = codeMappers.Where(c => item["degItem"].ToString().Equals(c.localCodeExplain)).FirstOrDefault().codeValue.ToString(),
 
+                        yau002 = item["GraduateSchool"].ToString(),
+                        aac183 = "070900",
+                        yac01g = item["GraduationTime"].ToString(),
+                        acb501 = item["Mobile"].ToString(),
+                        aac010 = item["Height"].ToString(),
+                        aab301 = "510400000000",
+
+                        aae006= item["name"].ToString(),
+                        aae011= item["PersonName"].ToString(),
+                        aae017="攀西人才网",
+                        aae036 = DateTime.Now.ToLocalTime().ToString(),
+                        aae396 = DateTime.Now.ToLocalTime().ToString(),
+                        aae022 = "510400000000",
                     };
 
                     list.Add(personInfo);

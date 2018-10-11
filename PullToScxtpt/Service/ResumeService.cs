@@ -48,30 +48,30 @@ namespace PullToScxtpt.Service
                 {
                     PersonResume PersonResume = new PersonResume()
                     {
-                        ACC200 = item["Number"].ToString(),
-                        AAC001 = item["AccountID"].ToString(),
-                        ACC201 = item["ResumeName"].ToString(),
-                        ACC202 = item["OpenStatus"].ToString(),
-                        ACC205 = item["Intention"].ToString(),
-                        ACC206 = item["Experiences"].ToString(),
-                        ACC208 = item["EducationAndTrainingBackground"].ToString(),
-                        ACC209 = item["SelfEvaluation"].ToString(),
-                        ACA111 = item["JobNumber"].ToString(),
-                        ACA112 = item["JobName"].ToString(),
-                        ACC034 = item["ExpectedSalary"].ToString(),
-                        ACC217 = item["Years"].ToString(),
+                        acc200 = item["Number"].ToString(),
+                        aac001 = item["AccountID"].ToString(),
+                        acc201 = item["ResumeName"].ToString(),
+                        acc202 = item["OpenStatus"].ToString(),
+                        acc205 = item["Intention"].ToString(),
+                        acc206 = item["Experiences"].ToString(),
+                        acc208 = item["EducationAndTrainingBackground"].ToString(),
+                        acc209 = item["SelfEvaluation"].ToString(),
+                        aca111 = item["JobNumber"].ToString(),
+                        aca112 = item["JobName"].ToString(),
+                        acc034 = item["ExpectedSalary"].ToString(),
+                        acc217 = item["Years"].ToString(),
 
                         //必填项 
                         //必填项 
                         //是否默认简历（0：默认，1：非默认）
-                        ACC203 = "0",
-                        AAE043 = item["UpdateTime"].ToString(),
-                        YAE100 = "攀枝花人才中心",
-                        AAE036 = item["UpdateTime"].ToString(),
-                        AAE017 = "攀枝花人才中心",
-                        AAE011 = "攀枝花市",
-                        AAE022 = "510401000000",
-                        YCB213 = item["WorkingMode"].ToString()
+                        acc203 = "0",
+                        aae043 = item["UpdateTime"].ToString(),
+                        yae100 = "攀枝花人才中心",
+                        aae036 = item["UpdateTime"].ToString(),
+                        aae017 = "攀枝花人才中心",
+                        aae011 = "攀枝花市",
+                        aae022 = "510401000000",
+                        ycb213 = item["WorkingMode"].ToString()
 
                     };
                     list.Add(PersonResume);

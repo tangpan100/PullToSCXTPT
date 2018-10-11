@@ -30,8 +30,8 @@ namespace PullToScxtpt
                                 cl.PersonName,
                                 cl.IssuingOrgan,
                                 cl.RegisteredCapital,
-                                cl.SetUpDate,
-                                cl.InspectionDate,
+                                CONVERT(varchar(100),  cl.SetUpDate, 20)SetUpDate ,
+                                CONVERT(varchar(100),  cl.InspectionDate, 20)InspectionDate ,
                                 cl.[Address] clAddress,
                                 cl.Nsrsbm
                         FROM CompanyBaseInfo cb join CompanyLicence cl on cb.Id = cl.CompanyID
