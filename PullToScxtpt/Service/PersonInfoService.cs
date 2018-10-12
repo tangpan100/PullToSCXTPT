@@ -14,19 +14,19 @@ namespace PullToScxtpt
         public List<PersonInfo> QueryPersonInfo()
         {
           
-            string cmdText = @"SELECT top 1  pbi.AccountID ,
+            string cmdText = @"SELECT top 1  LEFT(pbi.AccountID,20)AccountID ,
                                 pbi.PersonName ,
                                 pbi.IDCardNo ,
                                 Sex= case when pbi.Sex='男' then 1 else 2 end ,
                                 nat.ItemName natItem ,
-                                pbi.Birthday ,
+                                CONVERT(varchar(100),  pbi.Birthday, 20)Birthday ,
                                 MaritalStatus =case when pbi.MaritalStatus=0 then 1  when pbi.MaritalStatus=1 then 2 else 4 end ,
                                 ps.ItemName psItem ,
                                 we.Years ,
                                 deg.ItemName degItem ,
                                 eat.GraduateSchool ,
                                 eat.Major ,
-                                eat.GraduationTime ,
+                                CONVERT(varchar(100),  eat.GraduationTime, 20)GraduationTime ,
                                 pbi.Mobile ,
                                 pbi.Height,
                                 ic.name
@@ -68,7 +68,7 @@ namespace PullToScxtpt
                         aac011 = codeMappers.Where(c => item["degItem"].ToString().Equals(c.localCodeExplain)).FirstOrDefault().codeValue.ToString(),
 
                         yau002 = item["GraduateSchool"].ToString(),
-                        aac183 = "070900",
+                        //aac183 = "070900",
                         yac01g = item["GraduationTime"].ToString(),
                         acb501 = item["Mobile"].ToString(),
                         aac010 = item["Height"].ToString(),

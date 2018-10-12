@@ -40,7 +40,7 @@ namespace PullToScxtpt.Service
                                     JOIN dbo.CompanyJobs cj ON CONVERT(VARCHAR(50), cj.JobID) = jwi.ExpectedJobID
                                 
                              WHERE  pr.IsAudited = 1";
-            DataTable resumeInfoTable = SqlHelper.ExecuteDataTable(comText, new SqlParameter());
+            DataTable resumeInfoTable = SqlHelper.ExecuteDataTable(comText, new SqlParameter("@param", DBNull.Value));
             if (resumeInfoTable.Rows.Count > 0)
             {
                 List<PersonResume> list = new List<PersonResume>();

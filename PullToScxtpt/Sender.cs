@@ -82,7 +82,7 @@ namespace PullToScxtpt
                     SqlHelper.ExecuteNonQuery("insert into PullInfoRecord(number,UpdateTime,type)values(@number,@UpdateTime,@type)",
                         new SqlParameter("@number", prlist[i].acc200),
                         new SqlParameter("@UpdateTime", DateTime.Now.ToLocalTime()),
-                        new SqlParameter("@type", "个人信息")
+                        new SqlParameter("@type", "个人简历")
 
                         );
                 }

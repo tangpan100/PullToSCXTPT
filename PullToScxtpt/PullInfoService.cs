@@ -27,13 +27,14 @@ namespace PullToScxtpt
             {
                 Thread.Sleep(1000 * 10);
                 Sender sender = new Sender();
-              //  sender.InserCompanyInfo();
-                sender.InserPersonInfo();
+                //  sender.InserCompanyInfo();
+                //  sender.InserPersonInfo();
+                sender.InserPersonResume();
                 //timer1 = new System.Timers.Timer();
                 //timer1.Interval = 7200000;  //设置计时器事件间隔执行时间 2小时
                 //timer1.Elapsed += new System.Timers.ElapsedEventHandler(TMStart1_Elapsed);
                 //timer1.Enabled = true;
-          
+
                 //using (System.IO.StreamWriter sw = new System.IO.StreamWriter("C:\\log.txt", true))
 
                 //{
