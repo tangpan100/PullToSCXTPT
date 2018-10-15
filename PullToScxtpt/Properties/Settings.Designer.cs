@@ -22,15 +22,5 @@ namespace PullToScxtpt.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://119.6.84.89:8225/xtpt/services/yinHaiBusiness")]
-        public string PullToScxtpt_Scxtpt_YinHaiBusiness {
-            get {
-                return ((string)(this["PullToScxtpt_Scxtpt_YinHaiBusiness"]));
-            }
-        }
     }
 }

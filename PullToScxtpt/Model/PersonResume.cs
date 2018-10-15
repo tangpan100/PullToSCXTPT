@@ -54,7 +54,9 @@ namespace PullToScxtpt.Model
         public string aae022 { get; set; }
         //工作方式：全职，兼职，实习
         public string ycb213 { get; set; }
-   
+        //工作地点代码
+        public string acb215 { get; set; }
+
     }
 
 }

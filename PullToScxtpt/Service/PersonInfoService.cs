@@ -14,7 +14,7 @@ namespace PullToScxtpt
         public List<PersonInfo> QueryPersonInfo()
         {
           
-            string cmdText = @"SELECT top 1  LEFT(pbi.AccountID,20)AccountID ,
+            string cmdText = @"SELECT top 100  LEFT(pbi.AccountID,20)AccountID ,
                                 pbi.PersonName ,
                                 pbi.IDCardNo ,
                                 Sex= case when pbi.Sex='男' then 1 else 2 end ,
@@ -22,7 +22,8 @@ namespace PullToScxtpt
                                 CONVERT(varchar(100),  pbi.Birthday, 20)Birthday ,
                                 MaritalStatus =case when pbi.MaritalStatus=0 then 1  when pbi.MaritalStatus=1 then 2 else 4 end ,
                                 ps.ItemName psItem ,
-                                we.Years ,
+                                Years = case when we.Years<1 and we.Years>0 then 1  when we.Years<3 then 2
+                                when we.Years>=3 and we.Years<=5 then 3  when we.Years>5 and we.Years<=10 then 4 when we.Years>10 then 5 else 0 end,
                                 deg.ItemName degItem ,
                                 eat.GraduateSchool ,
                                 eat.Major ,

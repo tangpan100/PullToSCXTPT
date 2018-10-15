@@ -138,7 +138,51 @@ namespace PullToScxtpt.Helper
                 return null;
             }
 
+        }
 
+
+
+        public static List<JobCodeMapper> QueryJobCodeMapper()
+        {
+
+            string filePath = System.AppDomain.CurrentDomain.BaseDirectory.ToString() + "代码对应表（攀枝花）.xlsx";
+            if (filePath != "")
+            {
+                if (filePath.Contains("xls"))//判断文件是否存在
+                {
+                    int k = 0;
+                    string conn = "Provider = Microsoft.ACE.OLEDB.12.0; Data Source =" + filePath + ";Extended Properties=Excel 8.0;";
+                    OleDbConnection oleCon = new OleDbConnection(conn);
+                    oleCon.Open();
+                    string Sql = "select * from [职业分类对应表$]";
+                    OleDbDataAdapter mycommand = new OleDbDataAdapter(Sql, oleCon);
+                    DataSet ds = new DataSet();
+                    mycommand.Fill(ds, "[职业分类对应表$]");
+
+                    oleCon.Close();
+                    int count = ds.Tables["[职业分类对应表$]"].Rows.Count;
+                    List<JobCodeMapper> codeMappers = new List<JobCodeMapper>();
+                    for (int i = 0; i < count; i++)
+                    {
+                        JobCodeMapper model = new JobCodeMapper();
+                        string yy = ds.Tables["[职业分类对应表$]"].Rows[i][0].ToString().Trim();
+                        string xx = ds.Tables["[职业分类对应表$]"].Rows[i][1].ToString().Trim();
+                        model.typeCode = ds.Tables["[职业分类对应表$]"].Rows[i][0].ToString().Trim();
+                        model.ID = ds.Tables["[职业分类对应表$]"].Rows[i][2].ToString().Trim();
+                        model.ItemName = ds.Tables["[职业分类对应表$]"].Rows[i][3].ToString().Trim();
+                        codeMappers.Add(model);
+                    }
+                    return codeMappers;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
 
         }
 

@@ -12,6 +12,7 @@
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -24,7 +25,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -71,6 +71,9 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="BouncyCastle.Crypto">
       <HintPath>..\packages\BouncyCastle.1.8.3\lib\BouncyCastle.Crypto.dll</HintPath>
@@ -98,24 +101,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Connected Services\ServiceReference1\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
-    <Compile Include="Helper\AppContext.cs" />
-    <Compile Include="Helper\ClientAppConfig.cs" />
-    <Compile Include="Helper\DynamicInvokeService.cs" />
-    <Compile Include="Helper\Reflect.cs" />
-    <Compile Include="Helper\ReflectUtility.cs" />
     <Compile Include="Helper\RSAUtil.cs" />
-    <Compile Include="Helper\ServerAppConfig.cs" />
-    <Compile Include="Helper\ServiceProxyFactory.cs" />
-    <Compile Include="Helper\UnityContainer.cs" />
-    <Compile Include="Helper\WebSvcCaller.cs" />
     <Compile Include="Helper\XmlUtil.cs" />
     <Compile Include="Model\CodeMapper.cs" />
     <Compile Include="Model\PersonResume.cs" />
+    <Compile Include="Model\TaskTimer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Model\YetInsertInfo.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -133,10 +126,7 @@
     <Compile Include="PullInfoService.Designer.cs">
       <DependentUpon>PullInfoService.cs</DependentUpon>
     </Compile>
-    <Compile Include="Sender3.cs" />
-    <Compile Include="SenderInfo.cs" />
     <Compile Include="Service\CompanyInfoService.cs" />
-    <Compile Include="Helper\RequestSOAPHeader .cs" />
     <Compile Include="Model\CompanyInfo.cs" />
     <Compile Include="Helper\SqlHelper.cs" />
     <Compile Include="Model\PersonInfo.cs" />
@@ -148,40 +138,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\XmlResponse.cs" />
     <Compile Include="Service\ResumeService.cs" />
-    <Compile Include="Web References\Scxtpt\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.map</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Connected Services\ServiceReference1\PullToScxtpt.ServiceReference1.callBusinessGzipResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Connected Services\ServiceReference1\PullToScxtpt.ServiceReference1.callBusinessResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Connected Services\ServiceReference1\PullToScxtpt.ServiceReference1.cancelBusinessResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Connected Services\ServiceReference1\PullToScxtpt.ServiceReference1.confirmBusinessResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Connected Services\ServiceReference1\PullToScxtpt.ServiceReference1.getJylshResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Connected Services\ServiceReference1\YinHaiBusiness.wsdl" />
+    <None Include="app.manifest" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Web References\Scxtpt\Reference.map">
-      <Generator>MSDiscoCodeGenerator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Web References\Scxtpt\YinHaiBusiness.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
@@ -201,34 +166,6 @@
   </ItemGroup>
   <ItemGroup>
     <WebReferences Include="Web References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <WebReferenceUrl Include="http://119.6.84.89:8225/xtpt/services/yinHaiBusiness%3fwsdl">
-      <UrlBehavior>Dynamic</UrlBehavior>
-      <RelPath>Web References\Scxtpt\</RelPath>
-      <UpdateFromURL>http://119.6.84.89:8225/xtpt/services/yinHaiBusiness%3fwsdl</UpdateFromURL>
-      <ServiceLocationURL>
-      </ServiceLocationURL>
-      <CachedDynamicPropName>
-      </CachedDynamicPropName>
-      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
-      <CachedSettingsPropName>PullToScxtpt_Scxtpt_YinHaiBusiness</CachedSettingsPropName>
-    </WebReferenceUrl>
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadataStorage Include="Connected Services\ServiceReference1\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\ServiceReference1\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\ServiceReference1\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\ServiceReference1\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

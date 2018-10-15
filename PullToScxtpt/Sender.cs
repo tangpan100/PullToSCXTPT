@@ -40,6 +40,16 @@ namespace PullToScxtpt
 
                         );
                 }
+                else
+                {
+                    SqlHelper.ExecuteNonQuery("insert into PullIInfoErrorRecord(number,UpdateTime,type,errorMsg)values(@number,@UpdateTime,@type,@errorMsg)",
+                     new SqlParameter("@number", clist[i].aab001),
+                     new SqlParameter("@UpdateTime", DateTime.Now.ToLocalTime()),
+                     new SqlParameter("@type", "企业信息"),
+                      new SqlParameter("@errorMsg", ret)
+
+                     );
+                }
             }
 
 
@@ -63,6 +73,16 @@ namespace PullToScxtpt
 
                         );
                 }
+                else
+                {
+                    SqlHelper.ExecuteNonQuery("insert into PullIInfoErrorRecord(number,UpdateTime,type,errorMsg)values(@number,@UpdateTime,@type,@errorMsg)",
+                     new SqlParameter("@number", plist[i].aac001),
+                     new SqlParameter("@UpdateTime", DateTime.Now.ToLocalTime()),
+                     new SqlParameter("@type", "个人信息"),
+                      new SqlParameter("@errorMsg", ret)
+
+                     );
+                }
             }
            
         }
@@ -74,9 +94,10 @@ namespace PullToScxtpt
 
             for (int i = 0; i < prlist.Count; i++)
             {
-                string inputxml = XmlUtil.Serializer(typeof(PersonInfo), prlist[i]);
+                string inputxml = XmlUtil.Serializer(typeof(PersonResume), prlist[i]);
                 inputxml = inputxml.Replace("\r\n", "").Replace("    ", "").Replace("  ", "").Substring(21).Replace("<PersonResume>", "").Replace("</PersonResume>", "");
                 string ret = GetWsResult(privateKey, systemKey, ref inputxml, savePersonResume);
+
                 if (ret.Contains("success"))
                 {
                     SqlHelper.ExecuteNonQuery("insert into PullInfoRecord(number,UpdateTime,type)values(@number,@UpdateTime,@type)",
@@ -85,6 +106,16 @@ namespace PullToScxtpt
                         new SqlParameter("@type", "个人简历")
 
                         );
+                }
+                else
+                {
+                    SqlHelper.ExecuteNonQuery("insert into PullIInfoErrorRecord(number,UpdateTime,type,errorMsg)values(@number,@UpdateTime,@type,@errorMsg)",
+                     new SqlParameter("@number", prlist[i].acc200),
+                     new SqlParameter("@UpdateTime", DateTime.Now.ToLocalTime()),
+                     new SqlParameter("@type", "个人简历"),
+                      new SqlParameter("@errorMsg", ret)
+
+                     );
                 }
             }
 
