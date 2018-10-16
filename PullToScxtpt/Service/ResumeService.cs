@@ -1,20 +1,21 @@
-﻿using PullToScxtpt.Helper;
-using PullToScxtpt.Model;
+﻿using PullToScxtpt_px.Helper;
+using PullToScxtpt_px.Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PullToScxtpt.Service
+namespace PullToScxtpt_px.Service
 {
     public class ResumeService
     {
         public List<PersonResume> QueryPersonResume()
         {
-            string comText = @"SELECT top 100 pr.Number,left(pbi.AccountID,20)AccountID,
+            string comText = @"SELECT pr.Number,left(pbi.AccountID,20)AccountID,
                                     CONVERT(varchar(100),  pr.UpdateTime, 20)UpdateTime ,
                                     pr.ResumeName ,
                                     OpenStatus =case when pr.OpenStatus=0 then 0 else 1 end,
@@ -94,13 +95,18 @@ namespace PullToScxtpt.Service
                         //必填项 
                         //是否默认简历（0：默认，1：非默认）
                         acc203 = "0",
+                       // 登记日期
                         aae043 = item["UpdateTime"].ToString(),
-                        yae100 = "攀枝花人才中心",
+                        yae100 = "攀枝花市人才服务中心",
+                        //登记时间
                         aae036 = item["UpdateTime"].ToString(),
-                        aae017 = "攀枝花人才中心",
+                        aae017 = "攀枝花市人才服务中心",
+                        //经办机构
                         aae011 = "攀枝花市",
+                        //登记地区行政区划代码
                         aae022 = "510401000000",
                         ycb213 = item["WorkingMode"].ToString(),
+                        //工作地点代码
                         acb215 = "510401000000"
                     };
                     //PersonResume.aca111
@@ -118,9 +124,15 @@ namespace PullToScxtpt.Service
            
 
             }
+ 
+            DateTimeFormatInfo dtFormat = new DateTimeFormatInfo();
+            dtFormat.ShortDatePattern = "yyyy/MM/dd";
+            //需要推送的信息 过滤：未插入，插入但更新时间大于推送时间
 
-            List<string> ylist = YetInsertInfolist.Select(y => y.number).ToList();
-            List<PersonResume> personResumes = resumeInfolist.Where(r => !ylist.Any(y => y == r.acc200)).ToList();
+            List<PersonResume> personResumes1 = resumeInfolist.Where(r => !YetInsertInfolist.Any(y => y.number == r.acc200)).ToList();
+            List<PersonResume> personResumes2 = resumeInfolist.Where(r => YetInsertInfolist.Any(y => y.number == r.acc200 && Convert.ToDateTime(y.updateTime, dtFormat)
+            < Convert.ToDateTime(r.aae043, dtFormat))).ToList();
+            List<PersonResume> personResumes = personResumes1.Union(personResumes2).ToList<PersonResume>();
             return personResumes;
         }
     }

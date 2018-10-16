@@ -1,4 +1,4 @@
-﻿using PullToScxtpt.Model;
+﻿using PullToScxtpt_px.Model;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -8,7 +8,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 
-namespace PullToScxtpt.Helper
+namespace PullToScxtpt_px.Helper
 {
     public static class SqlHelper
     {
@@ -101,7 +101,7 @@ namespace PullToScxtpt.Helper
             {
                 if (filePath.Contains("xls"))//判断文件是否存在
                 {
-                    int k = 0;
+             
                     string conn = "Provider = Microsoft.ACE.OLEDB.12.0; Data Source =" + filePath + ";Extended Properties=Excel 8.0;";
                     OleDbConnection oleCon = new OleDbConnection(conn);
                     oleCon.Open();
@@ -150,7 +150,7 @@ namespace PullToScxtpt.Helper
             {
                 if (filePath.Contains("xls"))//判断文件是否存在
                 {
-                    int k = 0;
+                  
                     string conn = "Provider = Microsoft.ACE.OLEDB.12.0; Data Source =" + filePath + ";Extended Properties=Excel 8.0;";
                     OleDbConnection oleCon = new OleDbConnection(conn);
                     oleCon.Open();

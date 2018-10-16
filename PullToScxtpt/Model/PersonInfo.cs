@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PullToScxtpt.Model
+namespace PullToScxtpt_px.Model
 {
     public class PersonInfo
     {

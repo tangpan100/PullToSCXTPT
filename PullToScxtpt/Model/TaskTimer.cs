@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 
-namespace PullToScxtpt.Model
+namespace PullToScxtpt_px.Model
 {
     public class TaskTimer: Timer
     {

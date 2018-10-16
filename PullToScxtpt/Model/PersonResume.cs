@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PullToScxtpt.Model
+namespace PullToScxtpt_px.Model
 {
     /// <summary>
     /// 个人简历

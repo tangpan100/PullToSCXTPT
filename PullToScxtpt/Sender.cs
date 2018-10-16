@@ -1,4 +1,4 @@
-﻿using PullToScxtpt.Helper;
+﻿using PullToScxtpt_px.Helper;
 using System.Collections.Generic;
 
 
@@ -7,11 +7,11 @@ using System.Net;
 using System.IO;
 using System;
 using System.Data.SqlClient;
-using PullToScxtpt.Model;
-using PullToScxtpt.Service;
+using PullToScxtpt_px.Model;
+using PullToScxtpt_px.Service;
 using System.Collections;
 
-namespace PullToScxtpt
+namespace PullToScxtpt_px
 {
     public  class Sender
     {

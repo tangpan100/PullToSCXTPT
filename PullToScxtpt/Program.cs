@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.ServiceProcess;
 using System.Text;
+using Topshelf;
 
-namespace PullToScxtpt
+namespace PullToScxtpt_px
 {
     static class Program
     {
@@ -13,12 +16,23 @@ namespace PullToScxtpt
         /// </summary>
         static void Main()
         {
-            ServiceBase[] ServicesToRun;
-            ServicesToRun = new ServiceBase[]
+            string assemblyFilePath = Assembly.GetExecutingAssembly().Location;
+            string assemblyDirPath = Path.GetDirectoryName(assemblyFilePath);
+            string configFilePath = assemblyDirPath + "\\log4net.config";
+            log4net.Config.XmlConfigurator.Configure(new FileInfo(configFilePath));
+ 
+            HostFactory.Run(x =>
             {
-                new PullInfoService()
-            };
-            ServiceBase.Run(ServicesToRun);
+
+             //   x.UseLog4Net("log4net.config");
+                x.RunAsLocalSystem();
+                x.Service(settings => new PullInfoService());
+
+
+                x.SetDescription("推送人才网站信息到四川协同平台");
+                x.SetDisplayName("PullToScxtpt_px");
+                x.SetServiceName("PullInfoService");
+            });
         }
     }
 }
