@@ -15,7 +15,7 @@ namespace PullToScxtpt_px.Service
     {
         public List<PersonResume> QueryPersonResume()
         {
-            string comText = @"SELECT pr.Number,left(pbi.AccountID,20)AccountID,
+            string comText = @"SELECT pr.Number,left(pbi.AccountID,18)AccountID,
                                     CONVERT(varchar(100),  pr.UpdateTime, 20)UpdateTime ,
                                     pr.ResumeName ,
                                     OpenStatus =case when pr.OpenStatus=0 then 0 else 1 end,
@@ -60,7 +60,7 @@ namespace PullToScxtpt_px.Service
                     YetInsertInfo yetInsertInfo = new YetInsertInfo()
                     {
                         number = item["number"].ToString(),
-                        type = item["number"].ToString(),
+                        type = item["type"].ToString(),
                         updateTime =item["updateTime"].ToString()
 
                     };

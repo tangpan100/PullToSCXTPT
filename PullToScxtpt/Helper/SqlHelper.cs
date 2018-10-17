@@ -74,6 +74,7 @@ namespace PullToScxtpt_px.Helper
             {
                 cmd.CommandText = cmdText;
                 cmd.Parameters.AddRange(parameters);
+                cmd.CommandTimeout = 120;
                 using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
                 {
                     DataTable dt = new DataTable();
