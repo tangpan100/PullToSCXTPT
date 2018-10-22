@@ -43,7 +43,6 @@ namespace PullToScxtpt_px.Service
                                     JOIN (select *from( select *,ROW_NUMBER() over(partition by p2.JobId 
                                     order by p2.JobId)sequence from RecruitmentJobs p2 )t where t.sequence=1)
                                      cj ON CONVERT(VARCHAR(50), cj.JobID) = (SELECT top 1 * FROM dbo.StringSplit(jwi.ExpectedJobID ,','))
-                                
                              WHERE  pr.IsAudited = 1";
             DataTable resumeInfoTable = SqlHelper.ExecuteDataTable(comText, new SqlParameter("@param", DBNull.Value));
             List<JobCodeMapper> codeMappers = SqlHelper.QueryJobCodeMapper();
@@ -130,10 +129,10 @@ namespace PullToScxtpt_px.Service
             //需要推送的信息 过滤：未插入，插入但更新时间大于推送时间
 
             List<PersonResume> personResumes1 = resumeInfolist.Where(r => !YetInsertInfolist.Any(y => y.number == r.acc200)).ToList();
-            List<PersonResume> personResumes2 = resumeInfolist.Where(r => YetInsertInfolist.Any(y => y.number == r.acc200 && Convert.ToDateTime(y.updateTime, dtFormat)
-            < Convert.ToDateTime(r.aae043, dtFormat))).ToList();
-            List<PersonResume> personResumes = personResumes1.Union(personResumes2).ToList<PersonResume>();
-            return personResumes;
+            //List<PersonResume> personResumes2 = resumeInfolist.Where(r => YetInsertInfolist.Any(y => y.number == r.acc200 && Convert.ToDateTime(y.updateTime, dtFormat)
+            //< Convert.ToDateTime(r.aae043, dtFormat))).ToList();
+            //List<PersonResume> personResumes = personResumes1.Union(personResumes2).ToList<PersonResume>();
+            return personResumes1;
         }
     }
 }

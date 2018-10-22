@@ -39,6 +39,7 @@ namespace PullToScxtpt_px
                         new SqlParameter("@type", "企业信息")
 
                         );
+                 
                 }
                 else
                 {

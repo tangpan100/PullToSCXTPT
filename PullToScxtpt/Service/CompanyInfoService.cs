@@ -199,10 +199,10 @@ namespace PullToScxtpt_px
             //需要推送的信息 过滤：未插入，插入但更新时间大于推送时间
 
             List<CompanyInfo> companyInfos1 = companyInfolist.Where(r => !YetInsertInfolist.Any(y => y.number == r.aab001)).ToList();
-            List<CompanyInfo> companyInfos2 = companyInfolist.Where(r => YetInsertInfolist.Any(y => y.number == r.aab001 && Convert.ToDateTime(y.updateTime, dtFormat)
-            < Convert.ToDateTime(r.aae396, dtFormat))).ToList();
-            List<CompanyInfo> companyInfos = companyInfos1.Union(companyInfos2).ToList<CompanyInfo>();
-            return companyInfos;
+            //List<CompanyInfo> companyInfos2 = companyInfolist.Where(r => YetInsertInfolist.Any(y => y.number == r.aab001 && Convert.ToDateTime(y.updateTime, dtFormat)
+            //< Convert.ToDateTime(r.aae396, dtFormat))).ToList();
+            //List<CompanyInfo> companyInfos = companyInfos1.Union(companyInfos2).ToList<CompanyInfo>();
+            return companyInfos1;
         }
     }
 
