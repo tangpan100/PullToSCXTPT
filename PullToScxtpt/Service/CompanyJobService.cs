@@ -51,7 +51,8 @@ namespace PullToScxtpt_px
                                             ipc.ID [sid],
                                             ipc.ParentID spid,
                                             ca.AgentName,
-                                            j.JobID
+                                            j.JobID,
+                                            j.JobName
                                   FROM      dbo.CompanyJobs j
                                             JOIN dbo.CompanyBaseInfo cbi ON cbi.Id = j.CompanyID
                                             JOIN dbo.CompanyAgents CA ON CA.CompanyID = cbi.Id
@@ -98,10 +99,17 @@ namespace PullToScxtpt_px
                     companyJob.acb22a = item["Descrip"].ToString();
                     //岗位要求
                     
-                    companyJob.aca111 = item["require"].ToString();
-                    if (var aca111 = )
+                    companyJob.aca111 = item["JobID"].ToString();
+                
+                    var aca111 = codeMappers.Where(c => item["JobID"].ToString().ToUpper()
+                .Equals(c.ID)).FirstOrDefault();
+                    if (aca111==null)
                     {
-
+                        continue;
+                    }
+                    else
+                    {
+                        companyJob.aca111 = aca111.typeCode.ToString();
                     }
                     //所学专业
                     var aac183 = SpecialitycodeMappers.Where(c => item["sid"].ToString().ToUpper()
