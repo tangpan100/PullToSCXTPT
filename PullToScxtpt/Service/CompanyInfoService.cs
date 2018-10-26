@@ -15,8 +15,8 @@ namespace PullToScxtpt_px
        
         public List<CompanyInfo> QueryCompanyInfo()
         {
-            string comText = @"SELECT * FROM (SELECT  ROW_NUMBER() OVER(PARTITION BY cb.AccountID ORDER BY cb.AccountID)AS num,
-                                LEFT(cb.AccountID,18)AccountID,
+            string comText = @"SELECT * FROM (SELECT  ROW_NUMBER() OVER(PARTITION BY cb.ID ORDER BY cb.ID)AS num,
+                                LEFT(cb.ID,18)ID,
                                 cb.FullName,
                                 icn.ID icnItemCode,
                                 ics.ID icsItemCode,  
@@ -77,7 +77,7 @@ namespace PullToScxtpt_px
                     CompanyInfo companyInfo = new CompanyInfo()
 
                     {
-                        aab001 = item["AccountID"].ToString(),
+                        aab001 = item["ID"].ToString(),
                         aab004 = item["FullName"].ToString(),
                        // aae392 = item["SiteUrl"].ToString(),
                        // aae007 = item["Postalcode"].ToString(),

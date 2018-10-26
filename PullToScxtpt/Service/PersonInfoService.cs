@@ -123,9 +123,9 @@ namespace PullToScxtpt_px
                         acc217 = item["Years"].ToString(),
 
 
-                        yau002 = item["GraduateSchool"].ToString().Substring(0,200),
+                       
                         //aac183 = "070900",
-                        yac01g = item["GraduationTime"].ToString(),
+                       
                        
                         aac010 = item["Height"].ToString(),
                         aab301 = "510400000000",
@@ -137,6 +137,26 @@ namespace PullToScxtpt_px
                         aae396 = DateTime.Now.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss"),
                         aae022 = "510400000000",
                     };
+                    //毕业时间
+                    string yac01g = item["GraduationTime"].ToString();
+                    if (string.IsNullOrWhiteSpace(yac01g))
+                    {
+                        personInfo.yac01g = "无";
+                    }
+                    else
+                    {
+                        personInfo.yac01g = yac01g;
+                    }
+                    //毕业院校
+                    string yau002 = item["GraduateSchool"].ToString();
+                    if (yau002!=null&& yau002.Length>200)
+                    {
+                        personInfo.yau002 = yau002.Substring(0, 200);
+                    }
+                    else
+                    {
+                        personInfo.yau002 = "无";
+                    }
 
                     //身份证号
                     string aac002 = item["IDCardNo"].ToString().ToLower();

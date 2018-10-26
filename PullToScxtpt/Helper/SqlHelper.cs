@@ -187,5 +187,50 @@ namespace PullToScxtpt_px.Helper
 
         }
 
+
+        public static List<SpecialityCodeMapper> QuerySpecialityCodeMapper()
+        {
+
+            string filePath = System.AppDomain.CurrentDomain.BaseDirectory.ToString() + "代码对应表（攀枝花）.xlsx";
+            if (filePath != "")
+            {
+                if (filePath.Contains("xls"))//判断文件是否存在
+                {
+
+                    string conn = "Provider = Microsoft.ACE.OLEDB.12.0; Data Source =" + filePath + ";Extended Properties=Excel 8.0;";
+                    OleDbConnection oleCon = new OleDbConnection(conn);
+                    oleCon.Open();
+                    string Sql = "select * from [所学专业分类对应表$]";
+                    OleDbDataAdapter mycommand = new OleDbDataAdapter(Sql, oleCon);
+                    DataSet ds = new DataSet();
+                    mycommand.Fill(ds, "[所学专业分类对应表$]");
+
+                    oleCon.Close();
+                    int count = ds.Tables["[所学专业分类对应表$]"].Rows.Count;
+                    List<SpecialityCodeMapper> codeMappers = new List<SpecialityCodeMapper>();
+                    for (int i = 0; i < count; i++)
+                    {
+                        SpecialityCodeMapper model = new SpecialityCodeMapper();
+                        string yy = ds.Tables["[所学专业分类对应表$]"].Rows[i][0].ToString().Trim();
+                        string xx = ds.Tables["[所学专业分类对应表$]"].Rows[i][1].ToString().Trim();
+                        model.typeCode = ds.Tables["[所学专业分类对应表$]"].Rows[i][0].ToString().Trim();
+                        model.ID = ds.Tables["[所学专业分类对应表$]"].Rows[i][2].ToString().Trim();
+                        model.ItemName = ds.Tables["[所学专业分类对应表$]"].Rows[i][3].ToString().Trim();
+                        codeMappers.Add(model);
+                    }
+                    return codeMappers;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+
     }
 }

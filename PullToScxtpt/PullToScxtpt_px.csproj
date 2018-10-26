@@ -129,6 +129,7 @@
     <Compile Include="Helper\RSAUtil.cs" />
     <Compile Include="Helper\XmlUtil.cs" />
     <Compile Include="Model\CodeMapper.cs" />
+    <Compile Include="Model\CompanyJob.cs" />
     <Compile Include="Model\PersonResume.cs" />
     <Compile Include="Model\TaskTimer.cs">
       <SubType>Component</SubType>
@@ -141,6 +142,7 @@
     <Compile Include="Model\PersonInfo.cs" />
     <Compile Include="Helper\RSAExtensions.cs" />
     <Compile Include="Helper\RsaHelper.cs" />
+    <Compile Include="Service\CompanyJobService.cs" />
     <Compile Include="Service\PersonInfoService.cs" />
     <Compile Include="Sender.cs" />
     <Compile Include="Program.cs" />

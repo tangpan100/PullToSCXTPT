@@ -15,35 +15,66 @@ namespace PullToScxtpt_px.Service
     {
         public List<PersonResume> QueryPersonResume()
         {
-            string comText = @"SELECT pr.Number,left(pbi.AccountID,18)AccountID,
-                                    CONVERT(varchar(100),  pr.UpdateTime, 20)UpdateTime ,
-                                    pr.ResumeName ,
-                                    OpenStatus =case when pr.OpenStatus=0 then 0 else 1 end,
-                                    Intention = CASE WHEN jwi.Intention = NULL THEN 1
-                                                     ELSE 0
-                                                END ,
-                                    Experiences = CASE WHEN pwe.Experiences = NULL THEN 1
-                                                       ELSE 0
-                                                  END ,
-                                    EducationAndTrainingBackground = CASE WHEN et.EducationAndTrainingBackground = NULL
-                                                                          THEN 1
-                                                                          ELSE 0
-                                                                     END ,
-                                    SUBSTRING(pr.SelfEvaluation, 0, 500) SelfEvaluation ,
-                                    cj.JobID ,
-                                    cj.JobName,
-                                    WorkingMode=CASE WHEN jwi.WorkingMode=2 THEN '1' WHEN jwi.WorkingMode=1 THEN '2' ELSE '3' END,
-                                    Years = case when pwe.Years<1 and pwe.Years>0 then 1  when pwe.Years<3 then 2
-                                    when pwe.Years>=3 and pwe.Years<=5 then 3  when pwe.Years>5 and pwe.Years<=10 then 4 when pwe.Years>10 then 5 else 0 end
-                             FROM   dbo.PersonResumes pr
-                                    JOIN dbo.PersonBaseInfo pbi ON pr.InfoID=pbi.Id
-                                    JOIN dbo.PersonJobWantedIntention jwi ON jwi.ResumeID = pr.Id
-                                    JOIN PersonWorkExperience pwe ON pwe.ResumeID = pr.Id
-                                    JOIN dbo.PersonEducationAndTraining et ON et.ResumeID = pr.Id
-                                    JOIN (select *from( select *,ROW_NUMBER() over(partition by p2.JobId 
-                                    order by p2.JobId)sequence from RecruitmentJobs p2 )t where t.sequence=1)
-                                     cj ON CONVERT(VARCHAR(50), cj.JobID) = (SELECT top 1 * FROM dbo.StringSplit(jwi.ExpectedJobID ,','))
-                             WHERE  pr.IsAudited = 1";
+            string comText = @"SELECT   *
+                                               FROM     ( SELECT    pr.Number ,
+                                                                    ROW_NUMBER() OVER ( PARTITION BY Number ORDER BY Number ) sequence ,
+                                                                    LEFT(pbi.AccountID, 18) AccountID ,
+                                                                    CONVERT(VARCHAR(100), pr.UpdateTime, 20) UpdateTime ,
+                                                                    pr.ResumeName ,
+                                                                    OpenStatus = CASE WHEN pr.OpenStatus = 0 THEN 0
+                                                                                      ELSE 1
+                                                                                 END ,
+                                                                    Intention = CASE WHEN jwi.Intention = NULL THEN 1
+                                                                                     ELSE 0
+                                                                                END ,
+                                                                    Experiences = CASE WHEN pwe.Experiences = NULL
+                                                                                       THEN 1
+                                                                                       ELSE 0
+                                                                                  END ,
+                                                                    EducationAndTrainingBackground = CASE
+                                                                                                      WHEN et.EducationAndTrainingBackground = NULL
+                                                                                                      THEN 1
+                                                                                                      ELSE 0
+                                                                                                     END ,
+                                                                    SUBSTRING(pr.SelfEvaluation, 0, 500) SelfEvaluation ,
+                                                                    cj.JobID ,
+                                                                    cj.JobName ,
+                                                                    WorkingMode = CASE WHEN jwi.WorkingMode = 2
+                                                                                       THEN '1'
+                                                                                       WHEN jwi.WorkingMode = 1
+                                                                                       THEN '2'
+                                                                                       ELSE '3'
+                                                                                  END ,
+                                                                    Years = CASE WHEN pwe.Years < 1
+                                                                                      AND pwe.Years > 0 THEN 1
+                                                                                 WHEN pwe.Years < 3 THEN 2
+                                                                                 WHEN pwe.Years >= 3
+                                                                                      AND pwe.Years <= 5 THEN 3
+                                                                                 WHEN pwe.Years > 5
+                                                                                      AND pwe.Years <= 10 THEN 4
+                                                                                 WHEN pwe.Years > 10 THEN 5
+                                                                                 ELSE 0
+                                                                            END
+                                                          FROM      dbo.PersonResumes pr
+                                                                    JOIN dbo.PersonBaseInfo pbi ON pr.InfoID = pbi.Id
+                                                                    JOIN dbo.PersonJobWantedIntention jwi ON jwi.ResumeID = pr.Id
+                                                                    JOIN PersonWorkExperience pwe ON pwe.ResumeID = pr.Id
+                                                                    JOIN dbo.PersonEducationAndTraining et ON et.ResumeID = pr.Id
+                                                                    JOIN ( SELECT   *
+                                                                           FROM     ( SELECT    * ,
+                                                                                                ROW_NUMBER() OVER ( PARTITION BY p2.JobID ORDER BY p2.JobId ) sequence
+                                                                                      FROM      RecruitmentJobs p2
+                                                                                    ) t
+                                                                           WHERE    t.sequence = 1
+                                                                         ) cj ON CONVERT(VARCHAR(50), cj.JobID) = ( SELECT TOP 1
+                                                                                                      *
+                                                                                                      FROM
+                                                                                                      dbo.StringSplit(jwi.ExpectedJobID,
+                                                                                                      ',')
+                                                                                                      )
+                                                          WHERE     pr.IsAudited = 1
+                                                        ) t
+                                               WHERE    t.sequence = 1";
             DataTable resumeInfoTable = SqlHelper.ExecuteDataTable(comText, new SqlParameter("@param", DBNull.Value));
             List<JobCodeMapper> codeMappers = SqlHelper.QueryJobCodeMapper();
 

@@ -12,8 +12,33 @@ namespace PullToScxtpt_px
         private static object LockObject = new Object();
         // 检查更新锁
         private static int CheckUpDateLock = 0;
-    
-        private static System.Threading.Timer timer1 = null;  //计时器
+        /// <summary>
+        /// 校验时间
+        /// </summary>
+        public static DateTime CheckTime = DateTime.Now;
+        /// <summary>
+        /// 停止发送
+        /// </summary>
+        public static bool StopSend = false;
+        /// <summary>
+        /// 定时发送间隔时间
+        /// </summary>
+        public static int Interval = 60 * 1000*60*2;
+
+        /// <summary>
+        /// 标识是否正在运行
+        /// </summary>
+        public static bool IsRunning1 = false;
+        public static bool IsRunning2 = false;
+        public static bool IsRunning3 = false;
+
+        private static int delay = 0;
+
+        private static bool IsLock1 = false;
+        private static bool IsLock2 = false;
+        private static bool IsLock3 = false;
+
+        private static System.Threading.Timer timer1;  //计时器
         private static System.Threading.Timer timer2;  //计时器
         private static System.Threading.Timer timer3;  //计时器
         private int dueTime = 1000*2;//(单位毫秒)
@@ -25,115 +50,163 @@ namespace PullToScxtpt_px
             try
             {
 
+                if (
+              //核对状态
+              !PullInfoService.IsRunning1 ||
+              //核对时间，防止定时器意外终止，精确到分
+              PullInfoService.CheckTime.ToString("yyyy-MM-dd HH:mm") != DateTime.Now.ToString("yyyy-MM-dd HH:mm"))
+                {
+                    PullInfoService.IsRunning1 = false;
+                  //  PullInfoService.delay = delay;
+                    //如果定时器还存在，则销毁
+                    if (PullInfoService.timer3 != null)
+                    {
+                        PullInfoService.timer3.Dispose();
+                    }
+                 //   PullInfoService.timer3 = new System.Threading.Timer(PullInfoService.TMStart1_Elapsed, null, dueTime, period);
+                }
+
                 //sender.InserPersonInfo();
                 //sender.InserCompanyInfo();
                 //sender.InserPersonResume();
-                timer1 = new System.Threading.Timer(TMStart1_Elapsed, null, Timeout.Infinite, Timeout.Infinite);
-                timer1.Change(dueTime, period);
-                timer2 = new System.Threading.Timer(TMStart2_Elapsed, null, Timeout.Infinite, Timeout.Infinite);
-                timer2.Change(dueTime, period);
-                timer3 = new System.Threading.Timer(TMStart3_Elapsed, null, Timeout.Infinite, Timeout.Infinite);
-                timer3.Change(dueTime, period);
+                //timer1 = new System.Threading.Timer(TMStart1_Elapsed, null,dueTime, period);
+
+                //timer2 = new System.Threading.Timer(TMStart2_Elapsed, null, dueTime, period);
+                sender.InserCompanyjob();
+             
+            
             }
             catch (Exception ex)
             {
-                LogHelper.GetLog(this).Info(string.Format("DATE： {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))+"异常："+ex.Message);
+                LogHelper.GetLog(this).Info(string.Format("DATE： {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))+"异常："+ex.Message+ex.StackTrace);
             }
             return true;
         }
 
+       
         public bool Stop(HostControl hostControl)
         {
             return true;
         }
 
-        private void TMStart1_Elapsed(object state)
+        private static void TMStart1_Elapsed(object state)
         {
-            // 加锁检查更新锁
-            //lock (LockObject)
-            //{
-            //    if (CheckUpDateLock == 0) CheckUpDateLock = 1;
-            //    else return;
-            //}
-
-
-
-
+            //延时执行
+            if (PullInfoService.delay > 0)
+            {
+                System.Threading.Thread.Sleep(PullInfoService.delay);
+                PullInfoService.delay = 0;
+            }
+            //已经在执行了，就不再执行，直接执行完
+            if (PullInfoService.IsLock1)
+            {
+                return;
+            }
             try
             {
+                //锁定
+                PullInfoService.IsLock1 = true;
+
+                //发送
                 sender.InserCompanyInfo();
             }
             catch (Exception ex)
             {
 
-                LogHelper.GetLog(this).Error(string.Format("DATE： {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")) + "异常：插入公司信息" + ex.Message);
+                LogHelper.GetLog(typeof(PullInfoService)).Error(string.Format("DATE： {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")) + "异常：插入公司信息" + ex.Message + "||" + ex.StackTrace);
             }
-            //// 解锁更新检查锁
-            //lock (LockObject)
-            //{
-            //    CheckUpDateLock = 0;
-            //}
+            finally
+            {
+                //设置校验时间
+                PullInfoService.CheckTime = DateTime.Now;
+                PullInfoService.IsRunning1 = true;
+                //解锁
+                PullInfoService.IsLock1 = false;
+            }
 
+
+
+           
+           
+         
 
         }
 
         private void TMStart2_Elapsed(object state)
         {
-            //// 加锁检查更新锁
-            //lock (LockObject)
-            //{
-            //    if (CheckUpDateLock == 0) CheckUpDateLock = 1;
-            //    else return;
-            //}
-
-
+            //延时执行
+            if (PullInfoService.delay > 0)
+            {
+                System.Threading.Thread.Sleep(PullInfoService.delay);
+                PullInfoService.delay = 0;
+            }
+            //已经在执行了，就不再执行，直接执行完
+            if (PullInfoService.IsLock3)
+            {
+                return;
+            }
             try
             {
-                sender.InserPersonInfo();
+                //锁定
+                PullInfoService.IsLock3 = true;
 
+                //发送
+                sender.InserPersonInfo();
             }
             catch (Exception ex)
             {
 
-                LogHelper.GetLog(this).Error(string.Format("DATE： {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")) + "异常：插入个人信息" + ex.Message);
+                LogHelper.GetLog(typeof(PullInfoService)).Error(string.Format("DATE： {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")) + "异常：插入公司信息" + ex.Message + "||" + ex.StackTrace);
             }
-
-
-            //// 解锁更新检查锁
-            //lock (LockObject)
-            //{
-            //    CheckUpDateLock = 0;
-            //}
-
+            finally
+            {
+                //设置校验时间
+                PullInfoService.CheckTime = DateTime.Now;
+                PullInfoService.IsRunning3 = true;
+                //解锁
+                PullInfoService.IsLock3 = false;
+            }
 
         }
         private void TMStart3_Elapsed(object state)
         {
-            //// 加锁检查更新锁
-            //lock (LockObject)
-            //{
-            //    if (CheckUpDateLock == 0) CheckUpDateLock = 1;
-            //    else return;
-            //}
-
-
-
+            //延时执行
+            if (PullInfoService.delay > 0)
+            {
+                System.Threading.Thread.Sleep(PullInfoService.delay);
+                PullInfoService.delay = 0;
+            }
+            //已经在执行了，就不再执行，直接执行完
+            if (PullInfoService.IsLock3)
+            {
+                return;
+            }
             try
             {
+                //锁定
+                PullInfoService.IsLock3 = true;
 
+                //发送
                 sender.InserPersonResume();
             }
             catch (Exception ex)
             {
 
-                LogHelper.GetLog(this).Error(string.Format("DATE： {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")) + "异常：插入个人简历信息" + ex.Message);
+                LogHelper.GetLog(typeof(PullInfoService)).Error(string.Format("DATE： {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")) + "异常：插入公司信息" + ex.Message + "||" + ex.StackTrace);
+            }
+            finally
+            {
+                //设置校验时间
+                PullInfoService.CheckTime = DateTime.Now;
+                PullInfoService.IsRunning3 = true;
+                //解锁
+                PullInfoService.IsLock3 = false;
             }
 
-            //// 解锁更新检查锁
-            //lock (LockObject)
-            //{
-            //    CheckUpDateLock = 0;
-            //}
+
+
+          
+      
         }
 
     }

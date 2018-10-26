@@ -10,6 +10,7 @@ using System.Data.SqlClient;
 using PullToScxtpt_px.Model;
 using PullToScxtpt_px.Service;
 using System.Collections;
+using PullToScxtpt.Model;
 
 namespace PullToScxtpt_px
 {
@@ -18,6 +19,7 @@ namespace PullToScxtpt_px
         readonly string saveCompanyInfo = "scggzp_save_ab01";
         readonly string savePersonInfo = "scggzp_save_ac01";
         readonly string savePersonResume = "scggzp_save_cc20";
+        readonly string saveCompanyJob = "scggzp_save_cb20";
         readonly string privateKey = System.Configuration.ConfigurationManager.AppSettings["privateKey"].ToString();
         readonly string systemKey = System.Configuration.ConfigurationManager.AppSettings["systemKey"].ToString();
 
@@ -114,6 +116,40 @@ namespace PullToScxtpt_px
                      new SqlParameter("@number", prlist[i].acc200),
                      new SqlParameter("@UpdateTime", DateTime.Now.ToLocalTime()),
                      new SqlParameter("@type", "个人简历"),
+                      new SqlParameter("@errorMsg", ret)
+
+                     );
+                }
+            }
+
+        }
+
+        public void InserCompanyjob()
+        {
+            CompanyJobService companyJobService = new CompanyJobService();
+            List<CompanyJob> cjlist = companyJobService.QueryCompanyJobInfo();
+
+            for (int i = 0; i < cjlist.Count; i++)
+            {
+                string inputxml = XmlUtil.Serializer(typeof(CompanyJob), cjlist[i]);
+                inputxml = inputxml.Replace("\r\n", "").Replace("    ", "").Replace("  ", "").Substring(21).Replace("<CompanyJob>", "").Replace("</CompanyJob>", "");
+                string ret = GetWsResult(privateKey, systemKey, ref inputxml, saveCompanyJob);
+
+                if (ret.Contains("success"))
+                {
+                    SqlHelper.ExecuteNonQuery("insert into PullInfoRecord(number,UpdateTime,type)values(@number,@UpdateTime,@type)",
+                        new SqlParameter("@number", cjlist[i].acb200),
+                        new SqlParameter("@UpdateTime", DateTime.Now.ToLocalTime()),
+                        new SqlParameter("@type", "招聘信息")
+
+                        );
+                }
+                else
+                {
+                    SqlHelper.ExecuteNonQuery("insert into PullIInfoErrorRecord(number,UpdateTime,type,errorMsg)values(@number,@UpdateTime,@type,@errorMsg)",
+                     new SqlParameter("@number", cjlist[i].acb200),
+                     new SqlParameter("@UpdateTime", DateTime.Now.ToLocalTime()),
+                     new SqlParameter("@type", "招聘信息"),
                       new SqlParameter("@errorMsg", ret)
 
                      );

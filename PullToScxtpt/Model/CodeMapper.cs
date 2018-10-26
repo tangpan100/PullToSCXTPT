@@ -37,7 +37,18 @@ namespace PullToScxtpt_px.Model
         public string typeCode { get; set; }
 
     }
-   
+
+    public class SpecialityCodeMapper
+    {
+        //专业编号
+        public string ID { get; set; }
+        //专业名称
+        public string ItemName { get; set; }
+        //大类代码值
+        public string typeCode { get; set; }
+
+
+    }
 
 
 }
