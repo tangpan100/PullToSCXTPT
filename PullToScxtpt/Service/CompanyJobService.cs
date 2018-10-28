@@ -50,6 +50,7 @@ namespace PullToScxtpt_px
                                             j.[Status] ,
                                             ipc.ID [sid],
                                             ipc.ParentID spid,
+                                            ipc.ItemName,
                                             ca.AgentName,
                                             j.JobID,
                                             j.JobName
@@ -99,10 +100,19 @@ namespace PullToScxtpt_px
                     companyJob.acb22a = item["Descrip"].ToString();
                     //岗位要求
                     
-                    companyJob.aca111 = item["JobID"].ToString();
+                  
                 
                     var aca111 = codeMappers.Where(c => item["JobID"].ToString().ToUpper()
                 .Equals(c.ID)).FirstOrDefault();
+                    try
+                    {
+                        companyJob.aca111 = aca111.typeCode.ToString();
+                    }
+                    catch (Exception)
+                    {
+                        System.Diagnostics.Debug.WriteLine(item["JobID"].ToString() + "----" + item["JobName"].ToString());
+
+                    }
                     if (aca111==null)
                     {
                         continue;
@@ -118,22 +128,22 @@ namespace PullToScxtpt_px
                     {
                         var _aac183 = SpecialitycodeMappers.Where(c => item["spid"].ToString().ToUpper()
                    .Equals(c.ID)).FirstOrDefault();
-                        if (_aac183==null)
-                        {
-                            continue;
-                        }
-                        companyJob.aac183 = _aac183.typeCode.ToString();
+                        //if (_aac183==null)
+                        //{
+                        //    continue;
+                        //}
+                    
                         //try
                         //{
-                            
+                        //    companyJob.aac183 = _aac183.typeCode.ToString();
                         //}
                         //catch (Exception)
                         //{
 
-                        //    System.Diagnostics.Debug.WriteLine(item["sid"].ToString()+"-----------"+num++);
-                        //    System.Diagnostics.Debug.WriteLine(item["spid"].ToString());
+                        //    System.Diagnostics.Debug.WriteLine(item["sid"].ToString() + "    "+ item["spid"].ToString() + "    " + item["ItemName"].ToString());
+                           
                         //}
-                       
+
                     }
                     else
                     {
