@@ -17,48 +17,57 @@ namespace PullToScxtpt_px
         public List<CompanyJob> QueryCompanyJobInfo()
         {
 
-            string cmdText = @"  SELECT    j.JobNumber ,
-                                            LEFT(cbi.Id, 18) cid ,
-                                            j.JobName ,
-                                            LEFT(j.[Description], 1000) require ,
-                                            LEFT(j.[Description], 1000) Descrip ,
-                                            j.Amount ,
-                                            j.[Address] ,
-                                            WorkingMode = CASE WHEN j.WorkingMode = 2 THEN '1'
-                                                               WHEN j.WorkingMode = 1 THEN '2'
-                                                               ELSE '3'
-                                                          END ,
-                                            j.BeginAge ,
-                                            j.EndAge ,
-                                            WorkYears = CASE WHEN j.WorkYears < 1
-                                                                  AND j.WorkYears > 0 THEN 1
-                                                             WHEN j.WorkYears < 3 THEN 2
-                                                             WHEN j.WorkYears >= 3
-                                                                  AND j.WorkYears <= 5 THEN 3
-                                                             WHEN j.WorkYears > 5
-                                                                  AND j.WorkYears <= 10 THEN 4
-                                                             WHEN j.WorkYears > 10 THEN 5
-                                                             ELSE 0
-                                                        END ,
-                                            cbi.ContactOne ,
-                                            cbi.ContactOneMobile ,
-                                            cbi.ContactOnePhone ,
-                                            CONVERT(VARCHAR(100), j.CreateTime, 20) CreateTime ,
-                                            CONVERT(VARCHAR(100), j.UpdateTime, 20) UpdateTime ,
-                                            CONVERT(VARCHAR(100), j.PublishDate, 20) PublishDate ,
-                                            CONVERT(VARCHAR(100), j.EndTime, 20) EndTime ,
-                                            j.[Status] ,
-                                            ipc.ID [sid],
-                                            ipc.ParentID spid,
-                                            ipc.ItemName,
-                                            ca.AgentName,
-                                            j.JobID,
-                                            j.JobName
-                                  FROM      dbo.CompanyJobs j
-                                            JOIN dbo.CompanyBaseInfo cbi ON cbi.Id = j.CompanyID
-                                            JOIN dbo.CompanyAgents CA ON CA.CompanyID = cbi.Id
-                                            JOIN dbo.ItemProfessionalCategory ipc ON ipc.ID = j.ProfessionalCategoryID
-                                  WHERE     j.[Status] = 2 AND cbi.ContactOne IS NOT NULL";
+            string cmdText = @"SELECT  *
+                                    FROM    ( SELECT    ROW_NUMBER() OVER ( PARTITION BY j.JobNumber ORDER BY JobNumber ) AS sequece ,
+                                                        j.JobNumber ,
+                                                        LEFT(cbi.Id, 18) cid ,
+                                                        j.JobName ,
+                                                        LEFT(j.[Description], 300) require ,
+                                                        LEFT(j.[Description], 300) Descrip ,
+                                                        j.Amount ,
+                                                        LEFT(j.[Address], 30) [Address] ,
+                                                        WorkingMode = CASE WHEN j.WorkingMode = 2 THEN '1'
+                                                                           WHEN j.WorkingMode = 1 THEN '2'
+                                                                           ELSE '3'
+                                                                      END ,
+                                                        j.BeginAge ,
+                                                        j.EndAge ,
+                                                        WorkYears = CASE WHEN j.WorkYears < 1
+                                                                              AND j.WorkYears > 0 THEN 1
+                                                                         WHEN j.WorkYears < 3 THEN 2
+                                                                         WHEN j.WorkYears >= 3
+                                                                              AND j.WorkYears <= 5 THEN 3
+                                                                         WHEN j.WorkYears > 5
+                                                                              AND j.WorkYears <= 10 THEN 4
+                                                                         WHEN j.WorkYears > 10 THEN 5
+                                                                         ELSE 0
+                                                                    END ,
+                                                        cbi.ContactOne ,
+                                                        cbi.ContactOneMobile ,
+                                                        cbi.ContactOnePhone ,
+                                                        CONVERT(VARCHAR(100), j.CreateTime, 20) CreateTime ,
+                                                        CONVERT(VARCHAR(100), j.UpdateTime, 20) UpdateTime ,
+                                                        CONVERT(VARCHAR(100), j.PublishDate, 20) PublishDate ,
+                                                        CONVERT(VARCHAR(100), j.EndTime, 20) EndTime ,
+                                                        j.[Status] ,
+                                                        ipc.ID [sid] ,
+                                                        ipc.ParentID spid ,
+                                                        ipc.ItemName ,
+                                                        ca.AgentName ,
+                                                        j.JobID
+                                              FROM      dbo.CompanyJobs j
+                                                        JOIN dbo.CompanyBaseInfo cbi ON cbi.Id = j.CompanyID
+                                                        JOIN ( SELECT   ca.CompanyID ,
+                                                                        ca.AgentName
+                                                               FROM     CompanyAgents ca
+                                                               GROUP BY ca.CompanyID ,
+                                                                        ca.AgentName
+                                                             ) ca ON ca.CompanyID = cbi.Id
+                                                        JOIN dbo.ItemProfessionalCategory ipc ON ipc.ID = j.ProfessionalCategoryID
+                                              WHERE     j.[Status] = 2
+                                                        AND cbi.ContactOne IS NOT NULL
+                                            ) aaa
+                                    WHERE   aaa.sequece = 1;";
 
             DataTable companyjobInfoTable = PullToScxtpt_px.Helper.SqlHelper.ExecuteDataTable(cmdText, new SqlParameter("@IsAudit", 1));
             List<JobCodeMapper> codeMappers = SqlHelper.QueryJobCodeMapper();
@@ -104,21 +113,21 @@ namespace PullToScxtpt_px
                 
                     var aca111 = codeMappers.Where(c => item["JobID"].ToString().ToUpper()
                 .Equals(c.ID)).FirstOrDefault();
-                    try
-                    {
-                        companyJob.aca111 = aca111.typeCode.ToString();
-                    }
-                    catch (Exception)
-                    {
-                        System.Diagnostics.Debug.WriteLine(item["JobID"].ToString() + "----" + item["JobName"].ToString());
+                    //try
+                    //{
+                    //    companyJob.aca111 = aca111.typeCode.ToString();
+                    //}
+                    //catch (Exception)
+                    //{
+                    //    System.Diagnostics.Debug.WriteLine(item["JobID"].ToString() + "----" + item["JobName"].ToString());
 
-                    }
-                    if (aca111==null)
+                    //}
+                    if (aca111==null||string.IsNullOrWhiteSpace(aca111.typeCode.ToString()))
                     {
                         continue;
                     }
                     else
-                    {
+                    {  
                         companyJob.aca111 = aca111.typeCode.ToString();
                     }
                     //所学专业
@@ -128,11 +137,14 @@ namespace PullToScxtpt_px
                     {
                         var _aac183 = SpecialitycodeMappers.Where(c => item["spid"].ToString().ToUpper()
                    .Equals(c.ID)).FirstOrDefault();
-                        //if (_aac183==null)
-                        //{
-                        //    continue;
-                        //}
-                    
+                        if (_aac183 == null)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            companyJob.aac183 = _aac183.typeCode.ToString();
+                        }
                         //try
                         //{
                         //    companyJob.aac183 = _aac183.typeCode.ToString();
@@ -141,7 +153,7 @@ namespace PullToScxtpt_px
                         //{
 
                         //    System.Diagnostics.Debug.WriteLine(item["sid"].ToString() + "    "+ item["spid"].ToString() + "    " + item["ItemName"].ToString());
-                           
+
                         //}
 
                     }
@@ -172,7 +184,7 @@ namespace PullToScxtpt_px
                     }
                     //联系电话
                     companyJob.aae005 = item["ContactOneMobile"].ToString();
-                    if (!string.IsNullOrWhiteSpace(companyJob.aae005))
+                    if (string.IsNullOrWhiteSpace(companyJob.aae005))
                     {
                         if (!string.IsNullOrWhiteSpace(item["ContactOnePhone"].ToString()))
                         {

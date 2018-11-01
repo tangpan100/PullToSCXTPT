@@ -31,7 +31,7 @@ namespace PullToScxtpt_px
             for (int i = 0; i < clist.Count; i++)
             {
                 string inputxml = XmlUtil.Serializer(typeof(CompanyInfo), clist[i]);
-                inputxml = inputxml.Replace("\r\n", "").Replace("    ", "").Replace("  ", "").Substring(21).Replace("<CompanyInfo>", "").Replace("</CompanyInfo>", "");
+                inputxml = inputxml.Replace("\r\n  ", "").Replace("\r\n", "").Replace("    ", "").Substring(21).Replace("<CompanyInfo>", "").Replace("</CompanyInfo>", "");
                 string ret = GetWsResult(privateKey, systemKey, ref inputxml, saveCompanyInfo);
                 if (ret.Contains("success"))
                 {
@@ -65,7 +65,7 @@ namespace PullToScxtpt_px
             for (int i = 0; i < plist.Count; i++)
             {
                 string inputxml = XmlUtil.Serializer(typeof(PersonInfo), plist[i]);
-                inputxml = inputxml.Replace("\r\n", "").Replace("    ", "").Replace("  ", "").Substring(21).Replace("<PersonInfo>", "").Replace("</PersonInfo>", "");
+                inputxml = inputxml.Replace("\r\n  ", "").Replace("\r\n", "").Replace("    ", "").Substring(21).Replace("<PersonInfo>", "").Replace("</PersonInfo>", "");
                 string ret = GetWsResult(privateKey, systemKey, ref inputxml, savePersonInfo);
                 if (ret.Contains("success"))
                 {
@@ -98,7 +98,7 @@ namespace PullToScxtpt_px
             for (int i = 0; i < prlist.Count; i++)
             {
                 string inputxml = XmlUtil.Serializer(typeof(PersonResume), prlist[i]);
-                inputxml = inputxml.Replace("\r\n", "").Replace("    ", "").Replace("  ", "").Substring(21).Replace("<PersonResume>", "").Replace("</PersonResume>", "");
+                inputxml = inputxml.Replace("\r\n  ", "").Replace("\r\n", "").Replace("    ", "").Substring(21).Replace("<PersonResume>", "").Replace("</PersonResume>", "");
                 string ret = GetWsResult(privateKey, systemKey, ref inputxml, savePersonResume);
 
                 if (ret.Contains("success"))
@@ -132,7 +132,7 @@ namespace PullToScxtpt_px
             for (int i = 0; i < cjlist.Count; i++)
             {
                 string inputxml = XmlUtil.Serializer(typeof(CompanyJob), cjlist[i]);
-                inputxml = inputxml.Replace("\r\n", "").Replace("    ", "").Replace("  ", "").Substring(21).Replace("<CompanyJob>", "").Replace("</CompanyJob>", "");
+                inputxml = inputxml.Replace("\r\n  ", "").Replace("\r\n", "").Replace("    ", "").Substring(21).Replace("<CompanyJob>", "").Replace("</CompanyJob>", "");
                 string ret = GetWsResult(privateKey, systemKey, ref inputxml, saveCompanyJob);
 
                 if (ret.Contains("success"))
@@ -161,7 +161,7 @@ namespace PullToScxtpt_px
         private string GetWsResult(string privateKey, string systemKey, ref string inputxml,string opr)
         {
             inputxml = XmlUtil.ConvertXml(inputxml);
-            inputxml = inputxml.Replace(" ", "");
+           // inputxml = inputxml.Replace(" ", "");
 
             //签名
             string sign = RSAHelper.RSASignPEM(inputxml, privateKey, "SHA1", "UTF-8");
